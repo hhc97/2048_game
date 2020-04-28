@@ -1,14 +1,24 @@
-from random import randint, choice
+from random import choice
 
 
 class PlayingBoard:
+    """
+    A class that represents a 2048 game, with the necessary methods
+    to manipulate the game state.
+    """
+
     def __init__(self, n: int = 4):
+        """
+        Initializes the grid to empty, and adds <n> numbers
+        to start off the game.
+        """
         self._size = n
         self._grid = [[0] * n for _ in range(n)]
         for _ in range(n):
             self._add_random()
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """Returns the string representation of the board for easy printing."""
         numbers = []
         for row in self._grid:
             row_nums = []
@@ -41,7 +51,7 @@ class PlayingBoard:
 
     @staticmethod
     def _rotate_grid(grid: list, degree: int):
-        """Returns a rotated grid by <degree> degrees clockwise"""
+        """Returns a rotated grid by <degree> degrees clockwise."""
         if degree == 90:
             return [list(row) for row in zip(*grid[::-1])]
         elif degree == -90:
@@ -101,7 +111,7 @@ class PlayingBoard:
 
 
 if __name__ == '__main__':
-    game = PlayingBoard(4)
+    game = PlayingBoard()
     playing = True
     print(game)
 
