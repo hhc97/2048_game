@@ -2,9 +2,10 @@ from random import randint, choice
 
 
 class PlayingBoard:
-    def __init__(self):
-        self._grid = [[0] * 4 for _ in range(4)]
-        for _ in range(4):
+    def __init__(self, n: int = 4):
+        self._size = n
+        self._grid = [[0] * n for _ in range(n)]
+        for _ in range(n):
             self._add_random()
 
     def __str__(self):
@@ -12,30 +13,31 @@ class PlayingBoard:
         for row in self._grid:
             row_nums = []
             for num in row:
-                row_nums.append(str(num))
+                if num != 0:
+                    row_nums.append(str(num))
+                else:
+                    row_nums.append('.')
             numbers.append(' '.join(row_nums))
         return '\n'.join(numbers)
 
-    @staticmethod
-    def _fill_left(orig: list):
+    def _fill_left(self, orig: list):
         """Moves all numbers to their left if there is an empty space."""
         new_grid = []
         for row in orig:
             new_row = [n for n in row if n != 0]
-            new_row += [0] * (4 - len(new_row))
+            new_row += [0] * (self._size - len(new_row))
             new_grid.append(new_row)
         return new_grid
 
-    @staticmethod
-    def _move_left(orig: list):
+    def _move_left(self, orig: list):
         """Moves the grid left, merging numbers when applicable."""
-        board = PlayingBoard._fill_left(orig)
+        board = self._fill_left(orig)
         for row in board:
             for i in range(len(row) - 1):
                 if row[i] == row[i + 1]:
                     row[i] *= 2
                     row[i + 1] = 0
-        return PlayingBoard._fill_left(board)
+        return self._fill_left(board)
 
     @staticmethod
     def _rotate_grid(grid: list, degree: int):
@@ -49,11 +51,11 @@ class PlayingBoard:
 
     def _add_random(self):
         if any(0 in row for row in self._grid):
-            row = randint(0, 3)
-            col = randint(0, 3)
+            row = randint(0, self._size - 1)
+            col = randint(0, self._size - 1)
             while self._grid[row][col] != 0:
-                row = randint(0, 3)
-                col = randint(0, 3)
+                row = randint(0, self._size - 1)
+                col = randint(0, self._size - 1)
             addition = choice([2, 4])
             self._grid[row][col] = addition
 
