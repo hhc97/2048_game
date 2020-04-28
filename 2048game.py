@@ -49,15 +49,21 @@ class PlayingBoard:
         elif degree == 180 or degree == -180:
             return [row[::-1] for row in grid][::-1]
 
-    def _add_random(self):
+    def _add_random(self) -> bool:
+        """
+        Checks if there is an empty space to add a new number,
+        returns True and modifies the board if there is, and False otherwise.
+        """
         if any(0 in row for row in self._grid):
-            row = randint(0, self._size - 1)
-            col = randint(0, self._size - 1)
-            while self._grid[row][col] != 0:
-                row = randint(0, self._size - 1)
-                col = randint(0, self._size - 1)
-            addition = choice([2, 4])
-            self._grid[row][col] = addition
+            zero_positions = [[i, j]
+                              for i in range(self._size)
+                              for j in range(self._size)
+                              if self._grid[i][j] == 0]
+            row, col = choice(zero_positions)
+            to_add = choice([2, 4])
+            self._grid[row][col] = to_add
+            return True
+        return False
 
     def move_left(self):
         self._grid = self._move_left(self._grid)
@@ -95,7 +101,7 @@ class PlayingBoard:
 
 
 if __name__ == '__main__':
-    game = PlayingBoard()
+    game = PlayingBoard(4)
     playing = True
     print(game)
 
