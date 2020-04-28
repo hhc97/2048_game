@@ -105,26 +105,27 @@ class PlayingBoard:
         down = self._grid == self._move_down()
         return left and right and up and down
 
-    def move(self, direction: str) -> None:
+    def move(self, direction: str) -> bool:
         """
         Responsible for actually modifying the grid using the _move helpers.
+        Returns False if there are no further possible moves, True otherwise.
         """
-        moved = True
+        new_grid = []
         if direction in ['1', 'up', 'u']:
-            self._grid = self._move_up()
+            new_grid = self._move_up()
         elif direction in ['2', 'down', 'd']:
-            self._grid = self._move_down()
+            new_grid = self._move_down()
         elif direction in ['3', 'left', 'l']:
-            self._grid = self._move_left()
+            new_grid = self._move_left()
         elif direction in ['4', 'right', 'r']:
-            self._grid = self._move_right()
-        else:
-            print('invalid direction')
-            moved = False
-        if moved:
-            if not self._add_random():
-                if self._check_game_over():
-                    print('game over')
+            new_grid = self._move_right()
+        if new_grid != self._grid:
+            if not new_grid:
+                print('invalid direction')
+            else:
+                self._grid = new_grid
+                self._add_random()
+        return not self._check_game_over()
 
 
 if __name__ == '__main__':
@@ -134,5 +135,7 @@ if __name__ == '__main__':
 
     while playing:
         movement = input()
-        game.move(movement)
+        if not game.move(movement):
+            playing = False
         print(game)
+    print('game over')
