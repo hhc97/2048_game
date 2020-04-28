@@ -1,2 +1,4 @@
 # 2048_game
-A 2048 game coded in Python.
+A really simple implementation of 2048 in Python.
+
+Right now it's just a simple console based game. If I have the time, there are plans to code a visual interface and also implement some algorithm to self-play the game.
