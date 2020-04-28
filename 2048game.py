@@ -97,6 +97,14 @@ class PlayingBoard:
         rotated = self._slide_left(rotated)
         return self._rotate_grid(rotated, -90)
 
+    def _check_game_over(self) -> bool:
+        """Checks if the game is over by checking if any move is possible."""
+        left = self._grid == self._move_left()
+        right = self._grid == self._move_right()
+        up = self._grid == self._move_up()
+        down = self._grid == self._move_down()
+        return left and right and up and down
+
     def move(self, direction: str) -> None:
         """
         Responsible for actually modifying the grid using the _move helpers.
@@ -114,7 +122,9 @@ class PlayingBoard:
             print('invalid direction')
             moved = False
         if moved:
-            self._add_random()
+            if not self._add_random():
+                if self._check_game_over():
+                    print('game over')
 
 
 if __name__ == '__main__':
