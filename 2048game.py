@@ -7,7 +7,7 @@ class PlayingBoard:
     to manipulate the game state.
     """
 
-    def __init__(self, n: int = 4):
+    def __init__(self, n: int = 4) -> None:
         """
         Initializes the grid to empty, and adds <n> numbers
         to start off the game.
@@ -30,8 +30,8 @@ class PlayingBoard:
             numbers.append(' '.join(row_nums))
         return '\n'.join(numbers)
 
-    def _fill_left(self, orig: list):
-        """Moves all numbers to their left if there is an empty space."""
+    def _shift_left(self, orig: list) -> list:
+        """Sweeps all numbers as far left as they can go."""
         new_grid = []
         for row in orig:
             new_row = [n for n in row if n != 0]
@@ -39,18 +39,18 @@ class PlayingBoard:
             new_grid.append(new_row)
         return new_grid
 
-    def _move_left(self, orig: list):
+    def _slide_left(self, orig: list) -> list:
         """Moves the grid left, merging numbers when applicable."""
-        board = self._fill_left(orig)
+        board = self._shift_left(orig)
         for row in board:
             for i in range(len(row) - 1):
                 if row[i] == row[i + 1]:
                     row[i] *= 2
                     row[i + 1] = 0
-        return self._fill_left(board)
+        return self._shift_left(board)
 
     @staticmethod
-    def _rotate_grid(grid: list, degree: int):
+    def _rotate_grid(grid: list, degree: int) -> list:
         """Returns a rotated grid by <degree> degrees clockwise."""
         if degree == 90:
             return [list(row) for row in zip(*grid[::-1])]
@@ -75,39 +75,46 @@ class PlayingBoard:
             return True
         return False
 
-    def move_left(self):
-        self._grid = self._move_left(self._grid)
-        self._add_random()
+    def _move_left(self) -> list:
+        """Returns the grid after a left move."""
+        return self._slide_left(self._grid)
 
-    def move_right(self):
+    def _move_right(self) -> list:
+        """Returns the grid after a right move."""
         rotated = self._rotate_grid(self._grid, 180)
-        rotated = self._move_left(rotated)
-        self._grid = self._rotate_grid(rotated, -180)
-        self._add_random()
+        rotated = self._slide_left(rotated)
+        return self._rotate_grid(rotated, -180)
 
-    def move_up(self):
+    def _move_up(self) -> list:
+        """Returns the grid after a up move."""
         rotated = self._rotate_grid(self._grid, -90)
-        rotated = self._move_left(rotated)
-        self._grid = self._rotate_grid(rotated, 90)
-        self._add_random()
+        rotated = self._slide_left(rotated)
+        return self._rotate_grid(rotated, 90)
 
-    def move_down(self):
+    def _move_down(self) -> list:
+        """Returns the grid after a down move."""
         rotated = self._rotate_grid(self._grid, 90)
-        rotated = self._move_left(rotated)
-        self._grid = self._rotate_grid(rotated, -90)
-        self._add_random()
+        rotated = self._slide_left(rotated)
+        return self._rotate_grid(rotated, -90)
 
-    def move(self, direction: str):
+    def move(self, direction: str) -> None:
+        """
+        Responsible for actually modifying the grid using the _move helpers.
+        """
+        moved = True
         if direction in ['1', 'up', 'u']:
-            self.move_up()
+            self._grid = self._move_up()
         elif direction in ['2', 'down', 'd']:
-            self.move_down()
+            self._grid = self._move_down()
         elif direction in ['3', 'left', 'l']:
-            self.move_left()
+            self._grid = self._move_left()
         elif direction in ['4', 'right', 'r']:
-            self.move_right()
+            self._grid = self._move_right()
         else:
             print('invalid direction')
+            moved = False
+        if moved:
+            self._add_random()
 
 
 if __name__ == '__main__':
