@@ -80,40 +80,47 @@ class PlayingBoard:
 
     def _move_left(self) -> list:
         """Returns the grid after a left move."""
-        return self._slide_left(self._grid)
+        final = self._slide_left(self._grid)
+        return final if final != self._grid else None
 
     def _move_right(self) -> list:
         """Returns the grid after a right move."""
         rotated = self._rotate_grid(self._grid, 180)
         rotated = self._slide_left(rotated)
-        return self._rotate_grid(rotated, -180)
+        final = self._rotate_grid(rotated, -180)
+        return final if final != self._grid else None
 
     def _move_up(self) -> list:
         """Returns the grid after a up move."""
         rotated = self._rotate_grid(self._grid, -90)
         rotated = self._slide_left(rotated)
-        return self._rotate_grid(rotated, 90)
+        final = self._rotate_grid(rotated, 90)
+        return final if final != self._grid else None
 
     def _move_down(self) -> list:
         """Returns the grid after a down move."""
         rotated = self._rotate_grid(self._grid, 90)
         rotated = self._slide_left(rotated)
-        return self._rotate_grid(rotated, -90)
+        final = self._rotate_grid(rotated, -90)
+        return final if final != self._grid else None
 
     def _check_game_over(self) -> bool:
-        """Checks if the game is over by checking if any move is possible."""
-        left = self._grid == self._move_left()
-        right = self._grid == self._move_right()
-        up = self._grid == self._move_up()
-        down = self._grid == self._move_down()
-        return left and right and up and down
+        """
+        Checks if the game is over by checking if any move is possible.
+        Return True if no further move is possible.
+        """
+        left = self._move_left()
+        right = self._move_right()
+        up = self._move_up()
+        down = self._move_down()
+        return not (left or right or up or down)
 
     def move(self, direction: str) -> bool:
         """
         Responsible for actually modifying the grid using the _move helpers.
         Returns False if there are no further possible moves, True otherwise.
         """
-        new_grid = []
+        new_grid = None
         if direction in ['1', 'up', 'u']:
             new_grid = self._move_up()
         elif direction in ['2', 'down', 'd']:
@@ -122,13 +129,12 @@ class PlayingBoard:
             new_grid = self._move_left()
         elif direction in ['4', 'right', 'r']:
             new_grid = self._move_right()
-        if new_grid != self._grid:
-            if not new_grid:
-                print('invalid direction')
-            else:
-                self._grid = new_grid
-                self._add_random()
-                return True
+        else:
+            print('invalid move')
+        if new_grid:
+            self._grid = new_grid
+            self._add_random()
+            return True
         return not self._check_game_over()
 
 
