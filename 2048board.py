@@ -125,6 +125,7 @@ class PlayingBoard:
             else:
                 self._grid = new_grid
                 self._add_random()
+                return True
         return not self._check_game_over()
 
 
