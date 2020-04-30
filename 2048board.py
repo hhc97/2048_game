@@ -25,12 +25,7 @@ class PlayingBoard:
         """Returns the string representation of the board for easy printing."""
         numbers = []
         for row in self._grid:
-            row_nums = []
-            for num in row:
-                if num != 0:
-                    row_nums.append(str(num))
-                else:
-                    row_nums.append('.')
+            row_nums = [str(num) if num != 0 else '.' for num in row]
             numbers.append(' '.join(row_nums))
         return '\n'.join(numbers)
 
@@ -74,8 +69,7 @@ class PlayingBoard:
                               for j in range(self._size)
                               if self._grid[i][j] == 0]
             row, col = choice(zero_positions)
-            to_add = choice([2, 4])
-            self._grid[row][col] = to_add
+            self._grid[row][col] = choice([2, 4])
             return True
         return False
 
