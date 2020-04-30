@@ -142,7 +142,7 @@ class PlayingBoard:
         """Returns the favorability score of the current grid."""
         return BoardFavorability(self._grid).get_grid_score()
 
-    def smart_move(self, depth: int = 1, first_call=True):
+    def smart_move(self, depth: int = 3, first_call=True):
         """Uses BFS to return a suggested move for the current grid state."""
         current_score = self._get_favorability()
         if depth == 0:
@@ -179,7 +179,7 @@ if __name__ == '__main__':
     while playing:
         test = game.smart_move()
         print(test, '\n')
-        movement = input()
+        # movement = input()
         if not game.move(test):
             playing = False
         print(game)
