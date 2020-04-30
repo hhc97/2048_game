@@ -1,4 +1,5 @@
 from random import choice
+from favorability import BoardFavorability
 
 
 class PlayingBoard:
@@ -137,6 +138,38 @@ class PlayingBoard:
             return True
         return not self._check_game_over()
 
+    def _get_favorability(self) -> int:
+        """Returns the favorability score of the current grid."""
+        return BoardFavorability(self._grid).get_grid_score()
+
+    def smart_move(self, depth: int = 1, first_call=True):
+        """Uses BFS to return a suggested move for the current grid state."""
+        current_score = self._get_favorability()
+        if depth == 0:
+            return current_score
+
+        def _score_helper(func):
+            moved = func()
+            score = -1
+            if moved:
+                score = PlayingBoard(self._size, moved) \
+                    .smart_move(depth - 1, False)
+                if current_score > score and not first_call:
+                    score = current_score
+            return score
+
+        up = _score_helper(self._move_up)
+        down = _score_helper(self._move_down)
+        left = _score_helper(self._move_left)
+        right = _score_helper(self._move_right)
+
+        best = max(up, down, left, right)
+        if first_call:
+            moves = {up: '1', down: '2', left: '3', right: '4'}
+            return moves[best]
+        else:
+            return best
+
 
 if __name__ == '__main__':
     game = PlayingBoard()
@@ -144,8 +177,10 @@ if __name__ == '__main__':
     print(game)
 
     while playing:
+        test = game.smart_move()
+        print(test, '\n')
         movement = input()
-        if not game.move(movement):
+        if not game.move(test):
             playing = False
         print(game)
     print('game over')
