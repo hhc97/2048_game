@@ -7,15 +7,18 @@ class PlayingBoard:
     to manipulate the game state.
     """
 
-    def __init__(self, n: int = 4) -> None:
+    def __init__(self, n: int = 4, grid: list = None) -> None:
         """
-        Initializes the grid to empty, and adds <n> numbers
-        to start off the game.
+        Initializes a <n> by <n> grid if it is not provided,
+        and adds <n> numbers to start off the game.
         """
         self._size = n
-        self._grid = [[0] * n for _ in range(n)]
-        for _ in range(n):
-            self._add_random()
+        if not grid:
+            self._grid = [[0] * n for _ in range(n)]
+            for _ in range(n):
+                self._add_random()
+        else:
+            self._grid = grid
 
     def __str__(self) -> str:
         """Returns the string representation of the board for easy printing."""
