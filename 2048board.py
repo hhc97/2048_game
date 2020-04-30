@@ -175,12 +175,13 @@ if __name__ == '__main__':
     game = PlayingBoard()
     playing = True
     print(game)
+    move_map = {'1': 'up', '2': 'down', '3': 'left', '4': 'right'}
 
     while playing:
-        test = game.smart_move()
-        print(test, '\n')
+        move = game.smart_move()
+        print(move_map[move], '\n')
         # movement = input()
-        if not game.move(test):
+        if not game.move(move):
             playing = False
         print(game)
     print('game over')
