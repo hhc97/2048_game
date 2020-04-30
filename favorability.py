@@ -12,7 +12,7 @@ class BoardFavorability:
         """Assign a score for the largest value being in the corner."""
         largest_num = max(self._numbers)
         if self._grid[0][0] == largest_num:
-            return 50
+            return 5 * largest_num
         return 0
 
     def get_grid_score(self) -> int:
