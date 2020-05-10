@@ -23,6 +23,9 @@ class BoardFavorability:
         """
         Returns the final evaluation score associated with this particular
         <self._grid> configuration.
+
+        The final score must always be >= 0, as negative scores are used
+        to indicate invalid moves.
         """
         total_score = 0
         total_score += 1 * self._largest_number_in_corner_score()
